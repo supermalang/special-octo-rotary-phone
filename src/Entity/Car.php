@@ -3,191 +3,278 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Carbon\Carbon;
 
 /**
+ * @ApiResource(
+ *      collectionOperations={"get", "post"},
+ *      itemOperations={"get"={},"put"},
+ *      attributes={ "pagination_items_per_page"=10 },
+ *      normalizationContext={"groups"={"Car:read"}},
+ *      denormalizationContext={"groups"={"Car:write"}}
+ * )
+ * 
  * @ORM\Entity(repositoryClass="App\Repository\CarRepository")
  */
 class Car
 {
     /**
+     * @var integer the ID of the car
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"Car:read"})
      */
     private $id;
 
     /**
+     * @var string the immatriculation number of the car
      * @ORM\Column(type="string", length=8)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $immatriculation;
-
+    
     /**
+     * @var object the car model
      * @ORM\ManyToOne(targetEntity="App\Entity\CarModel", inversedBy="cars")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $model;
-
-
+    
+    
     /**
+     * @var string the car location
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $location;
-
+    
     /**
+     * @var string the chassis number 
      * @ORM\Column(type="string", length=50)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $chassisNumber;
-
+    
     /**
+     * @var integer The number of seats the car have
      * @ORM\Column(type="integer")
+     * @Groups({"Car:read", "Car:write"})
      */
     private $numberOfSeats;
-
+    
     /**
+     * @var integer The number of doors the car have
      * @ORM\Column(type="integer")
+     * @Groups({"Car:read", "Car:write"})
      */
     private $numberOfDoors;
-
+    
     /**
+     * @var string The color of the car
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $color;
-
+    
     /**
+     * @var integer The prince of the rent per KM (if specified)
      * @ORM\Column(type="integer")
+     * @Groups({"Car:read", "Car:write"})
      */
     private $rentPerKm;
-
+    
     /**
+     * @var integer The price of the rent per Hour (if specified)
      * @ORM\Column(type="integer")
+     * @Groups({"Car:read", "Car:write"})
      */
     private $rentPerHour;
-
+    
     /**
+     * @var integer The price of the rent per day (if specified)
      * @ORM\Column(type="integer")
+     * @Groups({"Car:read", "Car:write"})
      */
     private $rentPerDay;
-
+    
     /**
+     * @var integer The number of KM the car has made (To be updated regularly)
      * @ORM\Column(type="integer")
+     * @Groups({"Car:read", "Car:write"})
      */
     private $lastOdometer;
-
+    
     /**
+     * @var datetime The immatriculation date
      * @ORM\Column(type="datetime")
+     * @Groups({"Car:read", "Car:write"})
      */
     private $immatriculationDate;
-
+    
     /**
+     * @var datetime The date of the first contract
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $firstContractDate;
-
+    
     /**
+     * @var integer The initial value of the car
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $catalogValue;
-
+    
     /**
+     * @var The actual value of the car
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $residualValue;
-
+    
     /**
+     * @var string The type of transmission of the car
      * @ORM\Column(type="string", length=20)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $transmission;
-
+    
     /**
+     * @var string The type of fuel the car take
      * @ORM\Column(type="string", length=20)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $fuelCase;
-
+    
     /**
+     * @var float The CO2 emission
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $co2Emission;
-
+    
     /**
+     * @var integer The horsePower of the car
      * @ORM\Column(type="integer")
+     * @Groups({"Car:read", "Car:write"})
      */
     private $horsePower;
-
+    
     /**
+     * @var integer Power
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $power;
-
-    /**
+    
+    /** 
+     * @var integer The remaining fuel quantity in the car (in liters)
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $fuelQuantity;
-
+    
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $services;
-
+    
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $costs;
-
+    
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $contracts;
-
+    
     /**
+     * @var string The status of the car (available, booked, breakdown)
      * @ORM\Column(type="string", length=20)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $status;
-
+    
     /**
+     * @var datetime The date from which the car will be unavailable
      * @ORM\Column(type="date", nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $inavailabilityStartDate;
-
+    
+    /**
+     * @var datetime The date until which the car will be unavailable
+     * @ORM\Column(type="date", nullable=true)
+     * @Groups({"Car:read", "Car:write"})
+     */
+    private $inavailabilityEndDate;
+    
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"Car:read", "Car:write"})
      */
     private $tags;
-
+    
     /**
+     * @var datetime The date the entry was created in the system
      * @ORM\Column(type="datetime")
+     * @Groups({"Car:read"})
      */
     private $created;
-
+    
     /**
+     * @var datetime The date the entry was last modified in the system
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"Car:read"})
      */
     private $modified;
-
+    
+    /**
+     * @var integer The version history of the car
+     * @ORM\Column(type="integer")
+     * @Groups({"Car:read"})
+     */
+    private $versionHistory=1;
+    
+    /**
+     * 
+     * @ORM\ManyToOne(targetEntity="App\Entity\CarType", inversedBy="cars")
+     * @Groups({"Car:read","Car:write"})
+     */
+    private $carType;
+    
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"Car:read","Car:write"})
      */
-    private $createdby;
-
+    private $createdBy;
+    
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @Groups({"Car:read","Car:write"})
      */
     private $modifiedby;
-
+    
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $versionHistory;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\CarType", inversedBy="cars")
-     */
-    private $carType;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="cars")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="carsAssigned")
+     * @Groups({"Car:read","Car:write"})
      */
     private $driver;
+
+    public function __construct()
+    {
+        $this->created = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -218,12 +305,12 @@ class Car
         return $this;
     }
 
-    public function getDriver(): ?string
+    public function getDriver(): ?User
     {
         return $this->driver;
     }
 
-    public function setDriver(?string $driver): self
+    public function setDriver(?User $driver): self
     {
         $this->driver = $driver;
 
@@ -530,6 +617,18 @@ class Car
         return $this;
     }
 
+    public function getInavailabilityEndDate(): ?\DateTimeInterface
+    {
+        return $this->inavailabilityEndDate;
+    }
+
+    public function setInavailabilityEndDate(?\DateTimeInterface $inavailabilityEndDate): self
+    {
+        $this->inavailabilityStartDate = $inavailabilityEndDate;
+
+        return $this;
+    }
+
     public function getTags(): ?string
     {
         return $this->tags;
@@ -566,24 +665,24 @@ class Car
         return $this;
     }
 
-    public function getCreatedby(): ?string
+    public function getCreatedBy(): ?User
     {
-        return $this->createdby;
+        return $this->createdBy;
     }
 
-    public function setCreatedby(?string $createdby): self
+    public function setCreatedBy(?User $createdBy): self
     {
-        $this->createdby = $createdby;
+        $this->createdBy = $createdBy;
 
         return $this;
     }
 
-    public function getModifiedby(): ?string
+    public function getModifiedby(): ?User
     {
         return $this->modifiedby;
     }
 
-    public function setModifiedby(?string $modifiedby): self
+    public function setModifiedby(?User $modifiedby): self
     {
         $this->modifiedby = $modifiedby;
 

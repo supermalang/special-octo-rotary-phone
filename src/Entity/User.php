@@ -2,15 +2,14 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
-
 
 
 /**
@@ -31,7 +30,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank()
      * @Assert\Email()
-     * @Groups({"CarModel:read","CarBrand:read"})
+     * @Groups({"CarModel:read","CarBrand:read","Car:read"})
      */
     private $email;
 
@@ -41,8 +40,14 @@ class User implements UserInterface
     private $roles = [];
 
     /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     */
+    private $password;
+
+    /**
      * @ORM\Column(type="string", length=150)
-     * @Groups({"CarModel:read","CarBrand:read"})
+     * @Groups({"CarModel:read","CarBrand:read","Car:read"})
      */
     private $name;
 
@@ -92,11 +97,6 @@ class User implements UserInterface
     private $idCardProof;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Car", mappedBy="driver")
-     */
-    private $cars;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\CarModel", mappedBy="createdby")
      */
     private $carModels;
@@ -106,11 +106,16 @@ class User implements UserInterface
      */
     private $carBrands;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Car", mappedBy="driver")
+     */
+    private $carsAssigned;
+
     public function __construct()
     {
-        $this->cars = new ArrayCollection();
         $this->carModels = new ArrayCollection();
         $this->carBrands = new ArrayCollection();
+        $this->carsAssigned = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -162,9 +167,16 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword()
+    public function getPassword(): string
     {
-        // not needed for apps that do not check user passwords
+        return (string) $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     /**
@@ -172,7 +184,7 @@ class User implements UserInterface
      */
     public function getSalt()
     {
-        // not needed for apps that do not check user passwords
+        // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
     /**
@@ -273,7 +285,7 @@ class User implements UserInterface
         return $this->idCardType;
     }
 
-    public function setIdCardType(string $idCardType): self
+    public function setIdCardType(?string $idCardType): self
     {
         $this->idCardType = $idCardType;
 
@@ -285,7 +297,7 @@ class User implements UserInterface
         return $this->idCardNumber;
     }
 
-    public function setIdCardNumber(string $idCardNumber): self
+    public function setIdCardNumber(?string $idCardNumber): self
     {
         $this->idCardNumber = $idCardNumber;
 
@@ -300,37 +312,6 @@ class User implements UserInterface
     public function setIdCardProof(?string $idCardProof): self
     {
         $this->idCardProof = $idCardProof;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Car[]
-     */
-    public function getCars(): Collection
-    {
-        return $this->cars;
-    }
-
-    public function addCar(Car $car): self
-    {
-        if (!$this->cars->contains($car)) {
-            $this->cars[] = $car;
-            $car->setDriver($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCar(Car $car): self
-    {
-        if ($this->cars->contains($car)) {
-            $this->cars->removeElement($car);
-            // set the owning side to null (unless already changed)
-            if ($car->getDriver() === $this) {
-                $car->setDriver(null);
-            }
-        }
 
         return $this;
     }
@@ -391,6 +372,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($carBrand->getCreatedby() === $this) {
                 $carBrand->setCreatedby(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Car[]
+     */
+    public function getCarsAssigned(): Collection
+    {
+        return $this->carsAssigned;
+    }
+
+    public function addCarsAssigned(Car $carsAssigned): self
+    {
+        if (!$this->carsAssigned->contains($carsAssigned)) {
+            $this->carsAssigned[] = $carsAssigned;
+            $carsAssigned->setDriver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCarsAssigned(Car $carsAssigned): self
+    {
+        if ($this->carsAssigned->contains($carsAssigned)) {
+            $this->carsAssigned->removeElement($carsAssigned);
+            // set the owning side to null (unless already changed)
+            if ($carsAssigned->getDriver() === $this) {
+                $carsAssigned->setDriver(null);
             }
         }
 

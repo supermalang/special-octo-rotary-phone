@@ -12,12 +12,17 @@ use Carbon\Carbon;
 
 /**
  * @ApiResource(
- *      collectionOperations={"get", "post"},
+ *      collectionOperations={
+ *           "post",
+ *           "get"={"security"="is_granted('ROLE_ADMIN')"}
+ * },
  *      itemOperations={"get"={},"put"},
  *      normalizationContext={"groups"={"CarModel:read"}},
  *      denormalizationContext={"groups"={"CarModel:write"}},
  *      attributes={
- *          "pagination_items_per_page"=50
+ *          "pagination_items_per_page"=50,
+ *          "security"="is_granted('ROLE_ADMIN')",
+ *          "security_message"="Only admins can add books."
  *      }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CarModelRepository")
@@ -39,7 +44,7 @@ class CarModel
      * 
      * @ORM\ManyToOne(targetEntity="App\Entity\CarBrand", inversedBy="models")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"CarModel:read","CarModel:write"})
+     * @Groups({"CarModel:read","CarModel:write", "Car:read"})
      * @Assert\NotBlank(message="The car brand cannot be null")
      * @Assert\Type("object")
      */
@@ -49,7 +54,7 @@ class CarModel
      * $label the label of the car model
      * 
      * @ORM\Column(type="string", length=100)
-     * @Groups({"CarModel:read","CarModel:write","CarBrand:read"})
+     * @Groups({"CarModel:read","CarModel:write","Car:read"})
      * @Assert\NotBlank(message="The label cannot be null")
      * @Assert\Type("string")
      */
@@ -273,6 +278,13 @@ class CarModel
     public function setCreatedby(?User $createdby): self
     {
         $this->createdby = $createdby;
+
+        return $this;
+    }
+
+    public function setCreated(\DateTimeInterface $created): self
+    {
+        $this->created = $created;
 
         return $this;
     }

@@ -14,8 +14,8 @@ use Carbon\Carbon;
  * @ApiResource(
  *      collectionOperations={"get", "post"},
  *      itemOperations={"get"={},"put"},
- *      normalizationContext={"groups"={"CarBrand:read","CarModel:read"}},
- *      denormalizationContext={"groups"={"CarBrand:write","CarModel:read"}},
+ *      normalizationContext={"groups"={"CarBrand:read"}},
+ *      denormalizationContext={"groups"={"CarBrand:write"}},
  *      attributes={
  *          "pagination_items_per_page"=50
  *      }
@@ -40,7 +40,7 @@ class CarBrand
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank(message="The brand label cannot be null")
      * @Assert\Length(min=2, max=100, minMessage="The label lenght cannot be less than {{limit}}", maxMessage="The label lenght cannot be greater than {{limit}}")
-     * @Groups({"CarBrand:read", "CarBrand:write", "CarModel:read"})
+     * @Groups({"CarBrand:read", "CarBrand:write", "CarModel:read", "Car:read"})
      */
     private $label;
     
@@ -236,6 +236,13 @@ class CarBrand
     public function setModifiedby(?User $modifiedby): self
     {
         $this->modifiedby = $modifiedby;
+
+        return $this;
+    }
+
+    public function setCreated(\DateTimeInterface $created): self
+    {
+        $this->created = $created;
 
         return $this;
     }
