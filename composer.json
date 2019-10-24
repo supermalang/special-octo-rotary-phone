@@ -7,6 +7,7 @@
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.2",
         "doctrine/annotations": "^1.7",
+        "easycorp/easyadmin-bundle": "^2.3",
         "nesbot/carbon": "^2.24",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "4.3.*",
