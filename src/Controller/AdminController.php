@@ -22,6 +22,12 @@ class AdminController extends EasyAdminController
         if (method_exists($entity, 'setCreatedby')) {
             $entity->setCreatedby($this->user);
         }
+        
+        /** Set the entity creation date */
+        if (method_exists($entity, 'setCreated')) {
+            $now = new \DateTimeImmutable();
+            $entity->setCreated($now);
+        }
 
         parent::persistEntity($entity);
     }

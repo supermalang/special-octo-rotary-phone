@@ -7,3 +7,9 @@ vich_uploader:
             upload_destination: '%kernel.project_dir%/public/images/carmodels'
             namer: Vich\UploaderBundle\Naming\UniqidNamer
             delete_on_remove: true
+
+        customers_images:
+            uri_prefix: '%app.path.customers_images%'
+            upload_destination: '%kernel.project_dir%/public/images/customers'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            delete_on_remove: true

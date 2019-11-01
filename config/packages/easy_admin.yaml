@@ -6,7 +6,8 @@ easy_admin:
           - label: 'Bookings'
             icon: 'calendar-check'
             children:
-              - {entity: 'User', label: 'Customers', icon: 'id-badge'}
+              - {entity: 'Customer', label: 'Customers', icon: 'user-tie'}
+              - {entity: 'Customer', label: 'Bookings', icon: 'tasks'}
           - label: 'Fleet'
             icon: 'parking'
             children:
@@ -90,7 +91,7 @@ easy_admin:
             - { type: 'tab', columns: 4, label: 'Assets' }
             - numberOfSeats
             - numberOfDoors
-            - { property: 'transmission', type: 'choice', type_options: { choices: {'Automatic': 'automatic', 'Manual': 'manual'} } }
+            - { property: 'transmission', type: 'choice', type_options: { choices: {'Automatic': 'Automatic', 'Manual': 'Manual'} } }
             - { property: 'fuelCase', type: 'choice', type_options: { choices: {'Gasoline': 'gasoline', 'Diesel': 'diesel'} } }
             - co2Emission
             - horsePower
@@ -130,8 +131,28 @@ easy_admin:
 
       CarType:
         class: App\Entity\CarType
+
       CarBrand:
         class: App\Entity\CarBrand
+
+      Customer:
+        class: App\Entity\Customer
+        actions: [show, edit, delete, new, search]
+        list:
+          fields: [id, name, customerType, email, phone]
+        show:
+          fields: [{ property: 'image', type: 'image', base_path: '%app.path.customers_images%' }, name, customerType, email, {property: phone, label: Phone Number}, birthDate, userAccount, created, {property: createdby.name, label: Created by}, modified, {property: modifiedby.name, label: Modified by}, versionHistory]
+        form:
+          fields: 
+            - { type: 'group', columns: 4, label: 'Customer Image' }
+            - { property: 'imageFile', type: 'vich_image' }
+            - { type: 'group', columns: 8, label: 'Customer Properties' }
+            - name
+            - { property: 'customerType', type: 'choice', type_options: { choices: {'Person': 'Person', 'Enterprise': 'Enterprise'} } }
+            - email
+            - { property: 'phone', type: 'tel', label: Phone Number }
+            - { property: 'birthDate', type_options: { widget: 'single_text' }  }
+
       User:
         class: App\Entity\User
         controller: App\Controller\UserController
