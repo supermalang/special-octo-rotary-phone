@@ -67,36 +67,6 @@ class User implements UserInterface
     private $phoneNumber;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $address;
-
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $city;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $Country;
-
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $idCardType;
-
-    /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     */
-    private $idCardNumber;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $idCardProof;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\CarModel", mappedBy="createdby")
      */
     private $carModels;
@@ -244,78 +214,6 @@ class User implements UserInterface
     public function setPhoneNumber(string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
-
-        return $this;
-    }
-
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(string $address): self
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(string $city): self
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    public function getCountry(): ?string
-    {
-        return $this->Country;
-    }
-
-    public function setCountry(string $Country): self
-    {
-        $this->Country = $Country;
-
-        return $this;
-    }
-
-    public function getIdCardType(): ?string
-    {
-        return $this->idCardType;
-    }
-
-    public function setIdCardType(?string $idCardType): self
-    {
-        $this->idCardType = $idCardType;
-
-        return $this;
-    }
-
-    public function getIdCardNumber(): ?string
-    {
-        return $this->idCardNumber;
-    }
-
-    public function setIdCardNumber(?string $idCardNumber): self
-    {
-        $this->idCardNumber = $idCardNumber;
-
-        return $this;
-    }
-
-    public function getIdCardProof(): ?string
-    {
-        return $this->idCardProof;
-    }
-
-    public function setIdCardProof(?string $idCardProof): self
-    {
-        $this->idCardProof = $idCardProof;
 
         return $this;
     }

@@ -69,7 +69,7 @@ easy_admin:
             - { type: 'group', columns: 4, label: 'Assets' }
             - numberOfSeats
             - numberOfDoors
-            - { property: 'transmission', type: 'choice', type_options: { choices: {'Automatic': 'automatic', 'Manual': 'manual'} } }
+            - { property: 'transmission', type: 'choice', type_options: { choices: {'Automatic': 'Automatic', 'Manual': 'Manual'} } }
             - { property: 'fuelCase', type: 'choice', type_options: { choices: {'Gasoline': 'gasoline', 'Diesel': 'diesel'} } }
             - co2Emission
             - horsePower
@@ -177,7 +177,7 @@ easy_admin:
             - { type: 'group', columns: 6, label: 'User credentials' }
             - { property: 'email', type: 'email' }
             - { property: 'password', type: 'password' }
-            - { property: 'roles', type: 'choice', type_options: { multiple: true, expanded: true, choices: {'Employee': 'ROLE_USER', 'Driver': 'ROLE_DRIVER', 'Customer': 'ROLE_CUSTOMER', 'Manager': 'ROLE_ADMIN', 'SUPER ADMIN': 'ROLE_SUPER_ADMIN'} } }
+            - { property: 'roles', type: 'choice', type_options: { multiple: true, expanded: true, choices: {'Employee': 'ROLE_USER', 'Manager': 'ROLE_ADMIN', 'SUPER ADMIN': 'ROLE_SUPER_ADMIN'} } }
         edit:
           fields: 
             - { type: 'group', columns: 6, label: 'Personal informations' }
@@ -186,4 +186,4 @@ easy_admin:
             - { type: 'group', columns: 6, label: 'User credentials' }
             - { property: 'email', type: 'email' }
             - { property: 'password', type: 'password' }
-            - { property: 'roles', type: 'choice', type_options: { multiple: true, expanded: true, choices: {'Employee': 'ROLE_USER', 'Driver': 'ROLE_DRIVER', 'Customer': 'ROLE_CUSTOMER', 'Manager': 'ROLE_ADMIN', 'SUPER ADMIN': 'ROLE_SUPER_ADMIN'} } }
+            - { property: 'roles', type: 'choice', type_options: { multiple: true, expanded: true, choices: {'Employee': 'ROLE_USER', 'Manager': 'ROLE_ADMIN', 'SUPER ADMIN': 'ROLE_SUPER_ADMIN'} } }
