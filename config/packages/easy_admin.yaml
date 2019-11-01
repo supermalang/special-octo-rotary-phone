@@ -12,7 +12,7 @@ easy_admin:
             icon: 'parking'
             children:
               - { entity: 'Car', label: 'Cars', icon: 'car' }
-              - {entity: 'User', label: 'Drivers', icon: 'id-badge'}
+              - {entity: 'Driver', label: 'Drivers', icon: 'id-badge'}
               - { entity: 'CarModel', label: 'Car Models', icon: 'car' }
               - { entity: 'CarType', label: 'Car Categories', icon: 'shuttle-van' }
               - { entity: 'CarBrand', label: 'Manufacturers', icon: 'industry' }
@@ -155,6 +155,24 @@ easy_admin:
             - email
             - { property: 'phone', type: 'tel', label: Phone Number }
             - { property: 'birthDate', type_options: { widget: 'single_text' }  }
+
+      Driver:
+        class: App\Entity\Driver
+        actions: [show, edit, delete, new, search]
+        list:
+          fields: [id, firstName, middleName, lastName, phone]
+        show:
+          fields: [{ property: 'image', type: 'image', base_path: '%app.path.idcards_images%' }, idCardNumber, firstName, middleName, lastName, {property: phone, label: Phone Number}, created, {property: createdby.name, label: Created by}, modified, {property: modifiedby.name, label: Modified by}, versionHistory]
+        form:
+          fields: 
+            - { type: 'group', columns: 4, label: 'Identity documents' }
+            - { property: 'imageFile', type: 'vich_image' }
+            - { property: 'idCardNumber', label: Number of ID Card }
+            - { type: 'group', columns: 8, label: 'Driver Information' }
+            - firstName
+            - middleName
+            - lastName
+            - { property: 'phone', type: 'tel', label: Phone Number }
 
       User:
         class: App\Entity\User
