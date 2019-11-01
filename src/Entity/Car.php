@@ -275,9 +275,8 @@ class Car
 
     public function __construct()
     {
-        $this->created = new \DateTimeImmutable();
         $this->immatriculationDate = new \DateTimeImmutable();
-        $this->status = 'Working';
+        $this->status = 'Available';
     }
 
     public function __toString(){

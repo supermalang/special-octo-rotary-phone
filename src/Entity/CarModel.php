@@ -147,7 +147,6 @@ class CarModel
     public function __construct()
     {
         $this->cars = new ArrayCollection();
-        $this->created = new \DateTimeImmutable();
     }
 
     public function __toString(){

@@ -105,7 +105,6 @@ class CarBrand
     public function __construct()
     {
         $this->models = new ArrayCollection();
-        $this->created = new \DateTimeImmutable();
     }
 
     public function __toString(){
