@@ -6,6 +6,7 @@
 parameters:
     app.path.car_model_images: /images/carmodels
     app.path.customers_images: /images/customers
+    app.path.idcards_images: /images/idcards
 
 services:
     # default configuration for services in *this* file

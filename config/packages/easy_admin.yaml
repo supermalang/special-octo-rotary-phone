@@ -141,12 +141,15 @@ easy_admin:
         list:
           fields: [id, name, customerType, email, phone]
         show:
-          fields: [{ property: 'image', type: 'image', base_path: '%app.path.customers_images%' }, name, customerType, email, {property: phone, label: Phone Number}, birthDate, userAccount, created, {property: createdby.name, label: Created by}, modified, {property: modifiedby.name, label: Modified by}, versionHistory]
+          fields: [{ property: 'image', type: 'image', base_path: '%app.path.customers_images%' }, name, customerType, email, {property: phone, label: Phone Number}, birthDate, { property: 'idCardProof', type: 'image', base_path: '%app.path.idcards_images%' }, idCardType, idCardNumber, userAccount, created, {property: createdby.name, label: Created by}, modified, {property: modifiedby.name, label: Modified by}, versionHistory]
         form:
           fields: 
-            - { type: 'group', columns: 4, label: 'Customer Image' }
+            - { type: 'group', columns: 4, label: 'Identity documents' }
             - { property: 'imageFile', type: 'vich_image' }
-            - { type: 'group', columns: 8, label: 'Customer Properties' }
+            - { property: 'idCardType', label: Type of ID Card, type: 'choice', type_options: { choices: {'Select the type of ID Card': '', 'Identity Card': 'Identity Card', 'Driver License': 'Driver License', 'Passport': 'Passport'} } }
+            - { property: 'idcImageFile', type: 'vich_image' }
+            - { property: 'idCardNumber', label: Number of ID Card }
+            - { type: 'group', columns: 8, label: 'Identity' }
             - name
             - { property: 'customerType', type: 'choice', type_options: { choices: {'Person': 'Person', 'Enterprise': 'Enterprise'} } }
             - email

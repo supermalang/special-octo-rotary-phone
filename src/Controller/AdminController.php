@@ -55,7 +55,16 @@ class AdminController extends EasyAdminController
             $uploadPath = $this->propertyMappingFactory->fromField($entity, 'imageFile')->getUriPrefix();
 
             /** Save the upload path */
-            if (method_exists($entity, 'setImageUploadPath')){ $entity->setImageUploadPath("$uploadPath/"); }
+            $entity->setImageUploadPath("$uploadPath/");
+        }
+
+
+        /** Handle the ID Card image upload */
+        if (method_exists($entity, 'setIdCardUploadPath')) {
+            $uploadPath = $this->propertyMappingFactory->fromField($entity, 'idcImageFile')->getUriPrefix();
+
+            /** Save the upload path */
+            $entity->setIdCardUploadPath("$uploadPath/");
         }
         
         parent::updateEntity($entity);

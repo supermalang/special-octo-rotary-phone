@@ -13,3 +13,9 @@ vich_uploader:
             upload_destination: '%kernel.project_dir%/public/images/customers'
             namer: Vich\UploaderBundle\Naming\UniqidNamer
             delete_on_remove: true
+        
+        idcards_images:
+            uri_prefix: '%app.path.idcards_images%'
+            upload_destination: '%kernel.project_dir%/public/images/idcards'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            delete_on_remove: true

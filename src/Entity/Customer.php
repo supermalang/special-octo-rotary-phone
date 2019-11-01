@@ -66,6 +66,34 @@ class Customer
     private $imageUploadPath;
 
     /**
+     * @ORM\Column(type="string", length=20)
+     * @Assert\Length(min = 5, max = 20, minMessage="Please provide a phone number that has at least {{ limit }} digits", maxMessage="Please provide a phone number that has {{ limit }} digits max")
+     * @Assert\Regex(pattern="/^[0-9]*$/", message="Please provide a correct phone number with digits only")
+     */
+    private $phone;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     */
+    private $idCardType;
+
+    /**
+     * @Vich\UploadableField(mapping="idcards_images", fileNameProperty="idCardProof")
+     * @var File
+     */
+    private $idcImageFile;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $idCardProof;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $idCardNumber;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $created;
@@ -92,11 +120,9 @@ class Customer
     private $versionHistory=1;
 
     /**
-     * @ORM\Column(type="string", length=20)
-     * @Assert\Length(min = 5, max = 20, minMessage="Please provide a phone number that has at least {{ limit }} digits", maxMessage="Please provide a phone number that has {{ limit }} digits max")
-     * @Assert\Regex(pattern="/^[0-9]*$/", message="Please provide a correct phone number with digits only")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $phone;
+    private $idCardUploadPath;
 
     public function getId(): ?int
     {
@@ -279,6 +305,78 @@ class Customer
     public function setPhone(string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getIdCardType(): ?string
+    {
+        return $this->idCardType;
+    }
+
+    public function setIdCardType(?string $idCardType): self
+    {
+        $this->idCardType = $idCardType;
+
+        return $this;
+    }
+
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $idcImageFile
+     */
+    public function setIdcImageFile(?File $image = null): void
+    {
+        $this->idcImageFile = $image;
+
+        /** This is a workaround to trigger the doctrine event */
+        if ($image) {
+            $this->modified = new \DateTime('now');
+        }
+    }
+
+    public function getIdcImageFile(): ?File
+    {
+        return $this->idcImageFile;
+    }
+
+    public function getIdCardProof(): ?string
+    {
+        return $this->idCardProof;
+    }
+
+    public function setIdCardProof(?string $idCardProof): self
+    {
+        $this->idCardProof = $idCardProof;
+
+        return $this;
+    }
+
+    public function getIdCardNumber(): ?string
+    {
+        return $this->idCardNumber;
+    }
+
+    public function setIdCardNumber(?string $idCardNumber): self
+    {
+        $this->idCardNumber = $idCardNumber;
+
+        return $this;
+    }
+
+    public function getIdCardUploadPath(): ?string
+    {
+        return $this->idCardUploadPath;
+    }
+
+    public function setIdCardUploadPath(?string $idCardUploadPath): self
+    {
+        $this->idCardUploadPath = $idCardUploadPath;
 
         return $this;
     }
