@@ -108,6 +108,10 @@ class CarBrand
         $this->created = new \DateTimeImmutable();
     }
 
+    public function __toString(){
+        return (string) $this->getLabel();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

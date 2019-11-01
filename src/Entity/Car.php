@@ -7,6 +7,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\File\File;
+
 
 /**
  * @ApiResource(
@@ -86,14 +88,14 @@ class Car
      * @ORM\Column(type="integer")
      * @Groups({"Car:read", "Car:write"})
      */
-    private $rentPerKm;
+    private $rentPerKm=0;
     
     /**
      * @var integer The price of the rent per Hour (if specified)
      * @ORM\Column(type="integer")
      * @Groups({"Car:read", "Car:write"})
      */
-    private $rentPerHour;
+    private $rentPerHour=0;
     
     /**
      * @var integer The price of the rent per day (if specified)
@@ -274,6 +276,12 @@ class Car
     public function __construct()
     {
         $this->created = new \DateTimeImmutable();
+        $this->immatriculationDate = new \DateTimeImmutable();
+        $this->status = 'Working';
+    }
+
+    public function __toString(){
+        return (string) $this->getModel().' '.$this->getImmatriculation();
     }
 
     public function getId(): ?int

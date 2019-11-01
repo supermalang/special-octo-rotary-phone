@@ -1,6 +1,165 @@
-#easy_admin:
-#    entities:
-#        # List the entity class name you want to manage
-#        - App\Entity\Product
-#        - App\Entity\Category
-#        - App\Entity\User
+easy_admin:
+    site_name: 'Senauto Rent'
+    design:
+        brand_color: '#1ABC9C'
+        menu:
+          - label: 'Bookings'
+            icon: 'calendar-check'
+            children:
+              - {entity: 'User', label: 'Customers', icon: 'id-badge'}
+          - label: 'Fleet'
+            icon: 'parking'
+            children:
+              - { entity: 'Car', label: 'Cars', icon: 'car' }
+              - {entity: 'User', label: 'Drivers', icon: 'id-badge'}
+              - { entity: 'CarModel', label: 'Car Models', icon: 'car' }
+              - { entity: 'CarType', label: 'Car Categories', icon: 'shuttle-van' }
+              - { entity: 'CarBrand', label: 'Manufacturers', icon: 'industry' }
+          - label: 'Settings'
+            icon: 'sliders-h'
+            children:
+              - {entity: 'User', label: 'Users', icon: 'user'}
+    user:
+        display_name: true
+        name_property_path: 'name'
+        display_avatar: true
+    formats:
+        date:     'd/m/Y'
+        time:     'H:i'
+        datetime: 'd/m/Y H:i:s'
+    list:
+        actions: ['show','edit','delete','search']
+    entities:
+      Car:
+        class: App\Entity\Car
+        list:
+          title: Cars
+          actions: [ {name: new, label: 'Add Car', icon: plus}, show, edit, delete ]
+          fields: ['id', 'model', 'immatriculation', 'status', {property: 'modified', label: 'Last update'}, {property: 'modifiedby.name', label: 'Updated by'}]
+        show:
+          fields:
+            - { property: 'model.image', type: 'image', base_path: '%app.path.car_model_images%' }
+            - model
+            - color
+            - chassisNumber
+            - immatriculation
+            - catalogValue
+            - residualValue
+            - location
+            - rentPerDay
+            - fuelQuantity
+            - lastOdometer
+            - numberOfSeats
+            - numberOfDoors
+            - transmission
+            - fuelCase
+            - co2Emission
+            - horsePower
+            - power
+        edit:
+          fields: 
+            - { type: 'group', columns: 4, label: 'Basic information' }
+            - model
+            - { property: 'color', type: 'color' }
+            - chassisNumber
+            - immatriculation
+            - catalogValue
+            - residualValue
+            - { type: 'group', columns: 4, label: 'Assets' }
+            - numberOfSeats
+            - numberOfDoors
+            - { property: 'transmission', type: 'choice', type_options: { choices: {'Automatic': 'automatic', 'Manual': 'manual'} } }
+            - { property: 'fuelCase', type: 'choice', type_options: { choices: {'Gasoline': 'gasoline', 'Diesel': 'diesel'} } }
+            - co2Emission
+            - horsePower
+            - power
+            - { type: 'group', columns: 4, label: 'Services' }
+            - location
+            - { property: 'rentPerDay', type: 'money', type_options: { currency: 'XOF' } }
+            - { property: 'fuelQuantity', label: 'Tank Level' }
+            - lastOdometer
+        new:
+          fields: 
+            - { type: 'tab', columns: 4, label: 'Basic information' }
+            - { property: 'model', label: 'Car Model' }
+            - { property: 'color', type: 'color' }
+            - chassisNumber
+            - immatriculation
+            - catalogValue
+            - residualValue
+            - { type: 'tab', columns: 4, label: 'Assets' }
+            - numberOfSeats
+            - numberOfDoors
+            - { property: 'transmission', type: 'choice', type_options: { choices: {'Automatic': 'automatic', 'Manual': 'manual'} } }
+            - { property: 'fuelCase', type: 'choice', type_options: { choices: {'Gasoline': 'gasoline', 'Diesel': 'diesel'} } }
+            - co2Emission
+            - horsePower
+            - power
+            - { type: 'tab', columns: 4, label: 'Services' }
+            - location
+            - rentPerDay
+            - { property: 'fuelQuantity', type: 'integer', label: 'Tank Level' }
+            - lastOdometer
+            
+      CarModel:
+        class: App\Entity\CarModel
+        list:
+          actions: [ {name: new, label: 'Add Model', icon: plus}, show, edit, delete ]
+          title: Car Models
+          fields: [id, label, {property: brand.label, label: Manufacturer}, modified, {property: modifiedby.name, label: Modified by}]
+        show:
+          fields:
+            - { property: 'image', type: 'image', base_path: '%app.path.car_model_images%' }
+            - label
+            - {property: brand.label, label: Manufacturer}
+            - year
+            - created
+            - {property: createdby.name, label: Created by}
+            - modified
+            - {property: modifiedby.name, label: Modified by}
+            - versionHistory
+        form:
+          title: Edit Car Model
+          fields:
+            - { type: 'group', columns: 4, label: 'Model Image' }
+            - { property: 'imageFile', type: 'vich_image' }
+            - { type: 'group', columns: 8, label: 'Model Properties' }
+            - brand
+            - label
+            - year
+
+      CarType:
+        class: App\Entity\CarType
+      CarBrand:
+        class: App\Entity\CarBrand
+      User:
+        class: App\Entity\User
+        controller: App\Controller\UserController
+        list:
+          fields: ['id','name', 'email', 'phoneNumber', 'roles']
+        show:
+          fields:
+            - { property: 'name' }
+            - { property: 'phoneNumber' }
+            - { property: 'email' }
+            - { property: 'roles'}
+          actions:
+            - { name: 'changePassword', css_class: 'btn btn-warning', icon: edit }
+        new:
+          fields: 
+            - { type: 'group', columns: 6, label: 'Personal informations' }
+            - { property: 'name', type: 'text' }
+            - { property: 'phoneNumber', type: 'tel' }
+            - { type: 'group', columns: 6, label: 'User credentials' }
+            - { property: 'email', type: 'email' }
+            - { property: 'password', type: 'password' }
+            - { property: 'roles', type: 'choice', type_options: { multiple: true, expanded: true, choices: {'Employee': 'ROLE_USER', 'Driver': 'ROLE_DRIVER', 'Customer': 'ROLE_CUSTOMER', 'Manager': 'ROLE_ADMIN', 'SUPER ADMIN': 'ROLE_SUPER_ADMIN'} } }
+        edit:
+          fields: 
+            - { type: 'group', columns: 6, label: 'Personal informations' }
+            - { property: 'name', type: 'text' }
+            - { property: 'phoneNumber', type: 'tel' }
+            - { type: 'group', columns: 6, label: 'User credentials' }
+            - { property: 'email', type: 'email' }
+            - { property: 'password', type: 'password' }
+            - { property: 'roles', type: 'choice', type_options: { multiple: true, expanded: true, choices: {'Employee': 'ROLE_USER', 'Driver': 'ROLE_DRIVER', 'Customer': 'ROLE_CUSTOMER', 'Manager': 'ROLE_ADMIN', 'SUPER ADMIN': 'ROLE_SUPER_ADMIN'} } }

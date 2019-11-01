@@ -18,9 +18,16 @@ security:
             anonymous: true
 
             json_login:
-                check_path: app_login
+                check_path: login
                 username_path: email
                 password_path: password
+            guard:
+                authenticators:
+                    - App\Security\LoginControllerAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -31,9 +38,13 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         - { path: ^/car_models, roles: IS_AUTHENTICATED_FULLY  }
+         - { path: ^/senautoadmin, roles: IS_AUTHENTICATED_FULLY }
+         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # - { path: ^/profile, roles: ROLE_USER }
 
     role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_USER:                                                     # Employee
+        ROLE_DRIVER:                                                   # Driver
+        ROLE_CUSTOMER:                                                 # Customer
+        ROLE_ADMIN: [ROLE_USER, ROLE_DRIVER, ROLE_CUSTOMER]            # Manager
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]         # Super Admin

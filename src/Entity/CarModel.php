@@ -9,6 +9,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 /**
  * @ApiResource(
@@ -19,13 +22,11 @@ use Carbon\Carbon;
  *      itemOperations={"get"={},"put"},
  *      normalizationContext={"groups"={"CarModel:read"}},
  *      denormalizationContext={"groups"={"CarModel:write"}},
- *      attributes={
- *          "pagination_items_per_page"=50,
- *          "security"="is_granted('ROLE_ADMIN')",
- *          "security_message"="Only admins can add books."
- *      }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CarModelRepository")
+ * 
+ * @Vich\Uploadable
+ * 
  */
 class CarModel
 {
@@ -123,11 +124,34 @@ class CarModel
      * @Groups({"CarModel:read"})
      */
     private $cars;
+    
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"CarModel:read"})
+     */
+    private $image;
+
+    /**
+     * @Vich\UploadableField(mapping="car_model_images", fileNameProperty="image")
+     * @var File
+     */
+    private $imageFile;
+
+    /**
+     * $imageUploadPath Full path of the uploaded image. To be used in the API
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"CarModel:read"})
+     */
+    private $imageUploadPath;
 
     public function __construct()
     {
         $this->cars = new ArrayCollection();
         $this->created = new \DateTimeImmutable();
+    }
+
+    public function __toString(){
+        return (string) $this->getBrand()->getLabel().' '.$this->getLabel();
     }
 
     public function getId(): ?int
@@ -171,12 +195,12 @@ class CarModel
         return $this;
     }
 
-    public function getModifiedby(): ?string
+    public function getModifiedby(): ?User
     {
         return $this->modifiedby;
     }
 
-    public function setModifiedby(?string $modifiedby): self
+    public function setModifiedby(?User $modifiedby): self
     {
         $this->modifiedby = $modifiedby;
 
@@ -285,6 +309,53 @@ class CarModel
     public function setCreated(\DateTimeInterface $created): self
     {
         $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $imageFile
+     */
+    public function setImageFile(?File $image = null): void
+    {
+        $this->imageFile = $image;
+
+        /** This is a workaround to trigger the doctrine event */
+        if ($image) {
+            $this->modified = new \DateTime('now');
+        }
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    public function getImageUploadPath(): ?string
+    {
+        return $this->imageUploadPath;
+    }
+
+    public function setImageUploadPath(?string $imageUploadPath): self
+    {
+        $this->imageUploadPath = $imageUploadPath;
 
         return $this;
     }

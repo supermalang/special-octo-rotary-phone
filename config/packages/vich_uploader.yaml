@@ -2,6 +2,8 @@ vich_uploader:
     db_driver: orm
 
     mappings:
-        products:
-            uri_prefix: /media
-            upload_destination: '%kernel.project_dir%/public/images/cars'
+        car_model_images:
+            uri_prefix: '%app.path.car_model_images%'
+            upload_destination: '%kernel.project_dir%/public/images/carmodels'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            delete_on_remove: true
