@@ -273,6 +273,11 @@ class Car
      */
     private $driver;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Reservation", mappedBy="reservedCar", cascade={"persist", "remove"})
+     */
+    private $reservations;
+
     public function __construct()
     {
         $this->immatriculationDate = new \DateTimeImmutable();
@@ -716,6 +721,23 @@ class Car
     public function setContracts(?string $contracts): self
     {
         $this->contracts = $contracts;
+
+        return $this;
+    }
+
+    public function getReservations(): ?Reservation
+    {
+        return $this->reservations;
+    }
+
+    public function setReservations(Reservation $reservations): self
+    {
+        $this->reservations = $reservations;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $reservations->getReservedCar()) {
+            $reservations->setReservedCar($this);
+        }
 
         return $this;
     }

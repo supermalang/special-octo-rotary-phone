@@ -7,7 +7,7 @@ easy_admin:
             icon: 'calendar-check'
             children:
               - {entity: 'Customer', label: 'Customers', icon: 'user-tie'}
-              - {entity: 'Customer', label: 'Bookings', icon: 'tasks'}
+              - {entity: 'Reservation', label: 'Bookings', icon: 'tasks'}
           - label: 'Fleet'
             icon: 'parking'
             children:
@@ -134,6 +134,16 @@ easy_admin:
 
       CarBrand:
         class: App\Entity\CarBrand
+      
+      Reservation:
+        class: App\Entity\Reservation
+        form:
+          fields:
+            - pickupLocation
+            - pickupDate
+            - dropoffLocation
+            - dropoffDate
+            - driver
 
       Customer:
         class: App\Entity\Customer

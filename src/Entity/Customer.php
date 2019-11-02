@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -123,6 +125,16 @@ class Customer
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $idCardUploadPath;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Reservation", mappedBy="customer", orphanRemoval=true)
+     */
+    private $reservations;
+
+    public function __construct()
+    {
+        $this->reservations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -377,6 +389,37 @@ class Customer
     public function setIdCardUploadPath(?string $idCardUploadPath): self
     {
         $this->idCardUploadPath = $idCardUploadPath;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Reservation[]
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): self
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations[] = $reservation;
+            $reservation->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): self
+    {
+        if ($this->reservations->contains($reservation)) {
+            $this->reservations->removeElement($reservation);
+            // set the owning side to null (unless already changed)
+            if ($reservation->getCustomer() === $this) {
+                $reservation->setCustomer(null);
+            }
+        }
 
         return $this;
     }

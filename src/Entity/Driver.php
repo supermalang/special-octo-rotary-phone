@@ -89,6 +89,11 @@ class Driver
      */
     private $versionHistory=1;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Reservation", mappedBy="driver", cascade={"persist", "remove"})
+     */
+    private $reservations;
+
     public function __toString(){
         return (string) $this->getFirstName().' '.$this->getMiddleName().' '.$this.getLastName();
     }
@@ -262,6 +267,23 @@ class Driver
     public function setVersionHistory(int $versionHistory): self
     {
         $this->versionHistory = $versionHistory;
+
+        return $this;
+    }
+
+    public function getReservations(): ?Reservation
+    {
+        return $this->reservations;
+    }
+
+    public function setReservations(Reservation $reservations): self
+    {
+        $this->reservations = $reservations;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $reservations->getDriver()) {
+            $reservations->setDriver($this);
+        }
 
         return $this;
     }
