@@ -44,7 +44,7 @@ class Reservation
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Driver", inversedBy="reservations", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $driver;
 

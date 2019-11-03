@@ -78,7 +78,6 @@ class CarModel
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"CarModel:read","CarModel:write"})
      * @Assert\NotBlank
-     * @Assert\Type("object")
      */
     private $createdby;
 
@@ -220,13 +219,6 @@ class CarModel
     {
         return Carbon::instance($this->getCreated())->diffForHumans();
     }
-
-    /*public function setCreated(\DateTimeInterface $created): self
-    {
-        $this->created = $created;
-
-        return $this;
-    }*/
 
     public function getModified(): ?\DateTimeInterface
     {
