@@ -1,0 +1,48 @@
+easy_admin:
+  entities:
+    Reservation:
+        class: App\Entity\Reservation
+        controller: App\Controller\ReservationController
+        form:
+          fields:
+            - { type: 'tab', label: 'Car reservation' }
+            - pickupLocation
+            - { property: 'pickupDate', type_options: { widget: 'single_text' }  }
+            - dropoffLocation
+            - { property: 'dropoffDate', type_options: { widget: 'single_text' }  }
+            - reservedCar
+            - { type: 'tab', label: 'Booking Options' }
+            - { property: 'options', type: entity, type_options: { class: App\Entity\ReservationOption, choice_label: priceLabel, multiple: true, expanded: true} } 
+            - dailyRate
+            - {property: discountType, type: choice, type_options: { choices: {'Fixed amount': 'Fixed', 'Percent': 'Percent'}}}
+            - discount
+            - { type: 'tab', label: 'Customer' }
+            - customer
+
+    ReservationOption:
+      class: App\Entity\ReservationOption
+      list:
+        fields: [label, description, price]
+      form:
+        fields: [label, description, price]
+
+    Customer:
+        class: App\Entity\Customer
+        actions: [show, edit, delete, new, search]
+        list:
+          fields: [id, name, customerType, email, phone]
+        show:
+          fields: [{ property: 'image', type: 'image', base_path: '%app.path.customers_images%' }, name, customerType, email, {property: phone, label: Phone Number}, birthDate, { property: 'idCardProof', type: 'image', base_path: '%app.path.idcards_images%' }, idCardType, idCardNumber, userAccount, created, {property: createdby.name, label: Created by}, modified, {property: modifiedby.name, label: Modified by}, versionHistory]
+        form:
+          fields: 
+            - { type: 'group', columns: 4, label: 'Identity documents' }
+            - { property: 'imageFile', type: 'vich_image' }
+            - { property: 'idCardType', label: Type of ID Card, type: 'choice', type_options: { choices: {'Select the type of ID Card': '', 'Identity Card': 'Identity Card', 'Driver License': 'Driver License', 'Passport': 'Passport'} } }
+            - { property: 'idcImageFile', type: 'vich_image' }
+            - { property: 'idCardNumber', label: Number of ID Card }
+            - { type: 'group', columns: 8, label: 'Identity' }
+            - name
+            - { property: 'customerType', type: 'choice', type_options: { choices: {'Person': 'Person', 'Enterprise': 'Enterprise'} } }
+            - email
+            - { property: 'phone', type: 'tel', label: Phone Number }
+            - { property: 'birthDate', type_options: { widget: 'single_text' }  }

@@ -1,0 +1,106 @@
+easy_admin:
+  entities:
+    Car:
+      class: App\Entity\Car
+      list:
+        title: Cars
+        actions: [ {name: new, label: 'Add Car', icon: plus}, show, edit, delete ]
+        fields: ['id', 'model', 'immatriculation', 'status', {property: 'modified', label: 'Last update'}, {property: 'modifiedby.name', label: 'Updated by'}]
+      show:
+        fields:
+          - { property: 'model.image', type: 'image', base_path: '%app.path.car_model_images%' }
+          - model
+          - color
+          - chassisNumber
+          - immatriculation
+          - catalogValue
+          - residualValue
+          - location
+          - rentPerDay
+          - fuelQuantity
+          - lastOdometer
+          - numberOfSeats
+          - numberOfDoors
+          - transmission
+          - fuelCase
+          - co2Emission
+          - horsePower
+          - power
+      edit:
+        fields: 
+          - { type: 'group', columns: 4, label: 'Basic information' }
+          - model
+          - { property: 'color', type: 'color' }
+          - chassisNumber
+          - immatriculation
+          - catalogValue
+          - residualValue
+          - { type: 'group', columns: 4, label: 'Assets' }
+          - numberOfSeats
+          - numberOfDoors
+          - { property: 'transmission', type: 'choice', type_options: { choices: {'Automatic': 'Automatic', 'Manual': 'Manual'} } }
+          - { property: 'fuelCase', type: 'choice', type_options: { choices: {'Gasoline': 'gasoline', 'Diesel': 'diesel'} } }
+          - co2Emission
+          - horsePower
+          - power
+          - { type: 'group', columns: 4, label: 'Services' }
+          - location
+          - { property: 'rentPerDay', type: 'money', type_options: { currency: 'XOF' } }
+          - { property: 'fuelQuantity', label: 'Tank Level' }
+          - lastOdometer
+      new:
+        fields: 
+          - { type: 'tab', columns: 4, label: 'Basic information' }
+          - { property: 'model', label: 'Car Model' }
+          - { property: 'color', type: 'color' }
+          - chassisNumber
+          - immatriculation
+          - catalogValue
+          - residualValue
+          - { type: 'tab', columns: 4, label: 'Assets' }
+          - numberOfSeats
+          - numberOfDoors
+          - { property: 'transmission', type: 'choice', type_options: { choices: {'Automatic': 'Automatic', 'Manual': 'Manual'} } }
+          - { property: 'fuelCase', type: 'choice', type_options: { choices: {'Gasoline': 'gasoline', 'Diesel': 'diesel'} } }
+          - co2Emission
+          - horsePower
+          - power
+          - { type: 'tab', columns: 4, label: 'Services' }
+          - location
+          - rentPerDay
+          - { property: 'fuelQuantity', type: 'integer', label: 'Tank Level' }
+          - lastOdometer
+          
+    CarModel:
+      class: App\Entity\CarModel
+      controller: App\Controller\AdminController
+      list:
+        actions: [ {name: new, label: 'Add Model', icon: plus}, show, edit, delete ]
+        title: Car Models
+        fields: [id, label, {property: brand.label, label: Manufacturer}, modified, {property: modifiedby.name, label: Modified by}]
+      show:
+        fields:
+          - { property: 'image', type: 'image', base_path: '%app.path.car_model_images%' }
+          - label
+          - {property: brand.label, label: Manufacturer}
+          - year
+          - created
+          - {property: createdby.name, label: Created by}
+          - modified
+          - {property: modifiedby.name, label: Modified by}
+          - versionHistory
+      form:
+        title: Edit Car Model
+        fields:
+          - { type: 'group', columns: 4, label: 'Model Image' }
+          - { property: 'imageFile', type: 'vich_image' }
+          - { type: 'group', columns: 8, label: 'Model Properties' }
+          - brand
+          - label
+          - year
+
+    CarType:
+      class: App\Entity\CarType
+
+    CarBrand:
+      class: App\Entity\CarBrand

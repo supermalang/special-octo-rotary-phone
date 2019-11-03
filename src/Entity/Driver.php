@@ -100,7 +100,7 @@ class Driver
     }
 
     public function __toString(){
-        return (string) $this->getFullName(); //.$this->getMiddleName().' '.$this.getLastName();
+        return (string) $this->getFullName();
     }
 
     public function getFullName(){

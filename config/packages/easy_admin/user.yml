@@ -1,0 +1,33 @@
+easy_admin:
+  entities:
+    User:
+        class: App\Entity\User
+        controller: App\Controller\UserController
+        list:
+          fields: ['id','name', 'email', 'phoneNumber', 'roles']
+        show:
+          fields:
+            - { property: 'name' }
+            - { property: 'phoneNumber' }
+            - { property: 'email' }
+            - { property: 'roles'}
+          actions:
+            - { name: 'changePassword', css_class: 'btn btn-warning', icon: edit }
+        new:
+          fields: 
+            - { type: 'group', columns: 6, label: 'Personal informations' }
+            - { property: 'name', type: 'text' }
+            - { property: 'phoneNumber', type: 'tel' }
+            - { type: 'group', columns: 6, label: 'User credentials' }
+            - { property: 'email', type: 'email' }
+            - { property: 'password', type: 'password' }
+            - { property: 'roles', type: 'choice', type_options: { multiple: true, expanded: true, choices: {'Employee': 'ROLE_USER', 'Manager': 'ROLE_ADMIN', 'SUPER ADMIN': 'ROLE_SUPER_ADMIN'} } }
+        edit:
+          fields: 
+            - { type: 'group', columns: 6, label: 'Personal informations' }
+            - { property: 'name', type: 'text' }
+            - { property: 'phoneNumber', type: 'tel' }
+            - { type: 'group', columns: 6, label: 'User credentials' }
+            - { property: 'email', type: 'email' }
+            - { property: 'password', type: 'password' }
+            - { property: 'roles', type: 'choice', type_options: { multiple: true, expanded: true, choices: {'Employee': 'ROLE_USER', 'Manager': 'ROLE_ADMIN', 'SUPER ADMIN': 'ROLE_SUPER_ADMIN'} } }

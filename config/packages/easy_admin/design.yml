@@ -1,0 +1,31 @@
+easy_admin:
+    site_name: 'Senauto Rent'
+    design:
+        brand_color: '#1ABC9C'
+        menu:
+          - label: 'Bookings'
+            icon: 'calendar-check'
+            children:
+              - {entity: 'Customer', label: 'Customers', icon: 'user-tie'}
+              - {entity: 'Reservation', label: 'Bookings', icon: 'tasks'}
+          - label: 'Fleet'
+            icon: 'parking'
+            children:
+              - { entity: 'Car', label: 'Cars', icon: 'car' }
+              - {entity: 'Driver', label: 'Drivers', icon: 'id-badge'}
+              - { entity: 'CarModel', label: 'Car Models', icon: 'car' }
+              - { entity: 'CarType', label: 'Car Categories', icon: 'shuttle-van' }
+              - { entity: 'CarBrand', label: 'Manufacturers', icon: 'industry' }
+          - label: 'Settings'
+            icon: 'cog'
+            children:
+              - {entity: 'User', label: 'Users', icon: 'user'}
+              - {entity: 'ReservationOption', label: 'Reservation Options', icon: 'sliders-h'}
+    user:
+        display_name: true
+        name_property_path: 'name'
+        display_avatar: true
+    formats:
+        date:     'd/m/Y'
+        time:     'H:i'
+        datetime: 'd/m/Y H:i:s'
