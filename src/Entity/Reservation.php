@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -44,7 +46,7 @@ class Reservation
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Driver", inversedBy="reservations", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $driver;
 
@@ -103,7 +105,17 @@ class Reservation
     /**
      * @ORM\Column(type="smallint")
      */
-    private $versionHistory;
+    private $versionHistory=1;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\ReservationOption")
+     */
+    private $options;
+
+    public function __construct()
+    {
+        $this->options = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -310,6 +322,32 @@ class Reservation
     public function setVersionHistory(int $versionHistory): self
     {
         $this->versionHistory = $versionHistory;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ReservationOption[]
+     */
+    public function getOptions(): Collection
+    {
+        return $this->options;
+    }
+
+    public function addOption(ReservationOption $option): self
+    {
+        if (!$this->options->contains($option)) {
+            $this->options[] = $option;
+        }
+
+        return $this;
+    }
+
+    public function removeOption(ReservationOption $option): self
+    {
+        if ($this->options->contains($option)) {
+            $this->options->removeElement($option);
+        }
 
         return $this;
     }

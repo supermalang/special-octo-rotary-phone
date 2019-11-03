@@ -94,8 +94,20 @@ class Driver
      */
     private $reservations;
 
+
+    public function __construct()
+    {
+    }
+
     public function __toString(){
-        return (string) $this->getFirstName().' '.$this->getMiddleName().' '.$this.getLastName();
+        return (string) $this->getFullName(); //.$this->getMiddleName().' '.$this.getLastName();
+    }
+
+    public function getFullName(){
+        $fname= $this->getFirstName() ? $this->getFirstName() : '';
+        $mname= $this->getMiddleName() ? $this->getMiddleName() : '';
+        $lname= $this->getLastName() ? $this->getLastName() : '';
+        return "$fname $mname $lname";
     }
 
     public function getId(): ?int

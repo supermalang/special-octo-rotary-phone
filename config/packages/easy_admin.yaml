@@ -17,9 +17,10 @@ easy_admin:
               - { entity: 'CarType', label: 'Car Categories', icon: 'shuttle-van' }
               - { entity: 'CarBrand', label: 'Manufacturers', icon: 'industry' }
           - label: 'Settings'
-            icon: 'sliders-h'
+            icon: 'cog'
             children:
               - {entity: 'User', label: 'Users', icon: 'user'}
+              - {entity: 'ReservationOption', label: 'Reservation Options', icon: 'sliders-h'}
     user:
         display_name: true
         name_property_path: 'name'
@@ -104,6 +105,7 @@ easy_admin:
             
       CarModel:
         class: App\Entity\CarModel
+        controller: App\Controller\AdminController
         list:
           actions: [ {name: new, label: 'Add Model', icon: plus}, show, edit, delete ]
           title: Car Models
@@ -137,13 +139,29 @@ easy_admin:
       
       Reservation:
         class: App\Entity\Reservation
+        controller: App\Controller\ReservationController
         form:
           fields:
+            - { type: 'tab', label: 'Car reservation' }
             - pickupLocation
-            - pickupDate
+            - { property: 'pickupDate', type_options: { widget: 'single_text' }  }
             - dropoffLocation
-            - dropoffDate
-            - driver
+            - { property: 'dropoffDate', type_options: { widget: 'single_text' }  }
+            - reservedCar
+            - { type: 'tab', label: 'Booking Options' }
+            - { property: 'options', type: entity, type_options: { class: App\Entity\ReservationOption, choice_label: priceLabel, multiple: true, expanded: true} } 
+            - dailyRate
+            - {property: discountType, type: choice, type_options: { choices: {'Fixed amount': 'Fixed', 'Percent': 'Percent'}}}
+            - discount
+            - { type: 'tab', label: 'Customer' }
+            - customer
+
+      ReservationOption:
+        class: App\Entity\ReservationOption
+        list:
+          fields: [label, description, price]
+        form:
+          fields: [label, description, price]
 
       Customer:
         class: App\Entity\Customer
