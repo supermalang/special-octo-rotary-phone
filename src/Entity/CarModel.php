@@ -77,7 +77,6 @@ class CarModel
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="carModels")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"CarModel:read","CarModel:write"})
-     * @Assert\NotBlank
      */
     private $createdby;
 

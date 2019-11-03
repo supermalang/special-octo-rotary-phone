@@ -57,7 +57,15 @@ class ReservationOption
     /**
      * @ORM\Column(type="smallint")
      */
-    private $versionHistory;
+    private $versionHistory=1;
+
+    public function __toString() {
+        return $this->getLabel();
+    }
+
+    public function getPriceLabel(){
+        return $this->getLabel()." - ".$this->getPrice()." frcs";
+    }
 
     public function getId(): ?int
     {

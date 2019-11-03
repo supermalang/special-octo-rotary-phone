@@ -16,10 +16,6 @@ class AdminController extends EasyAdminController
         $this->user =$this->tokenStorage->getToken()->getUser();
     }
 
-    public function persistCarModelEntity($entity){
-        $entity->setYear(2049);
-    }
-
     /** Before creating any entity managed by EasyAdmin */
     public function persistEntity($entity){
         /** Set the user who created the entity */
