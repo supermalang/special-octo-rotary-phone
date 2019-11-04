@@ -9,6 +9,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 /**
  * @ApiResource(
@@ -21,6 +24,8 @@ use Carbon\Carbon;
  *      }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CarBrandRepository")
+ * @Vich\Uploadable
+ * 
  */
 class CarBrand
 {
@@ -43,12 +48,23 @@ class CarBrand
      * @Groups({"CarBrand:read", "CarBrand:write", "CarModel:read", "Car:read"})
      */
     private $label;
+
+    /**
+     * @Vich\UploadableField(mapping="manufacturers_images", fileNameProperty="image")
+     * @var File
+     */
+    private $imageFile;
     
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"CarBrand:read"})
      */
-    private $logo;
+    private $image;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageUploadPath;
 
     /**
      * $versionHistory the version history of the data entry                                                                                `
@@ -128,14 +144,49 @@ class CarBrand
         return $this;
     }
 
-    public function getLogo(): ?string
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     *
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $imageFile
+     */
+    public function setImageFile(?File $image = null): void
     {
-        return $this->logo;
+        $this->imageFile = $image;
+
+        /** This is a workaround to trigger the doctrine event */
+        if ($image) {
+            $this->modified = new \DateTime('now');
+        }
     }
 
-    public function setLogo(?string $logo): self
+    public function getImageFile(): ?File
     {
-        $this->logo = $logo;
+        return $this->imageFile;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    public function getImageUploadPath(): ?string
+    {
+        return $this->imageUploadPath;
+    }
+
+    public function setImageUploadPath(?string $imageUploadPath): self
+    {
+        $this->imageUploadPath = $imageUploadPath;
 
         return $this;
     }
