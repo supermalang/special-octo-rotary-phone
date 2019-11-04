@@ -56,7 +56,7 @@ class Reservation
     private $numberOfDays;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="integer")
      */
     private $dailyRate;
 

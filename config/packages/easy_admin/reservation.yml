@@ -3,6 +3,25 @@ easy_admin:
     Reservation:
         class: App\Entity\Reservation
         controller: App\Controller\ReservationController
+        show:
+          fields: 
+            - customer
+            - reservedCar
+            - pickupDate
+            - pickupLocation
+            - dropoffDate
+            - dropoffLocation
+            - numberOfDays
+            - dailyRate
+            - discount
+            - driver
+            - options
+            - status
+            - created
+            - createdby.name
+            - modified
+            - modifiedby.name
+            - versionHistory
         form:
           fields:
             - { type: 'tab', label: 'Car reservation' }
