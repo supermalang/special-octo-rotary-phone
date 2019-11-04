@@ -4,10 +4,17 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *      itemOperations={"get"={},"put"},
+ *      normalizationContext={"groups"={"ReservationOption:read"}},
+ *      denormalizationContext={"groups"={"ReservationOption:write"}},
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\ReservationOptionRepository")
+ * 
  */
 class ReservationOption
 {
@@ -15,21 +22,25 @@ class ReservationOption
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"ReservationOption:read"})
      */
     private $id;
-
+    
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"ReservationOption:read"})
      */
     private $label;
-
+    
     /**
      * @ORM\Column(type="text")
+     * @Groups({"ReservationOption:read"})
      */
     private $description;
-
+    
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"ReservationOption:read"})
      */
     private $price;
 

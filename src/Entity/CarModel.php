@@ -125,7 +125,7 @@ class CarModel
     
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"CarModel:read"})
+     * @Groups({"CarModel:read", "Car:read"})
      */
     private $image;
 
@@ -138,7 +138,7 @@ class CarModel
     /**
      * $imageUploadPath Full path of the uploaded image. To be used in the API
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"CarModel:read"})
+     * @Groups({"CarModel:read","Car:read"})
      */
     private $imageUploadPath;
 

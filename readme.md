@@ -12,6 +12,8 @@ php bin/console make:controller --no-template
 
 php bin/console security:encode
 
+php bin/console workflow:dump workflow-name | dot -Tpng -o graph.png
+
 
 To enable the GraphQL support, run composer require webonyx/graphql-php,
 when browse /api/graphql.
