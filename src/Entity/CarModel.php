@@ -148,7 +148,12 @@ class CarModel
     }
 
     public function __toString(){
-        return (string) $this->getBrand()->getLabel().' '.$this->getLabel();
+        return (string) $this->getFullModelName();
+    }
+
+    /** Returns the name of the model with the Manufacturer included */
+    public function getFullModelName(){
+        return $this->getBrand()->getLabel()." ".$this->getLabel();
     }
 
     public function getId(): ?int

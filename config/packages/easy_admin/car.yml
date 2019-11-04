@@ -5,7 +5,7 @@ easy_admin:
       list:
         title: Cars
         actions: [ {name: new, label: 'Add Car', icon: plus}, show, edit, delete ]
-        fields: ['id', 'model', 'immatriculation', 'status', {property: 'modified', label: 'Last update'}, {property: 'modifiedby.name', label: 'Updated by'}]
+        fields: ['id', 'model.fullModelName', 'immatriculation', 'status', {property: 'modified', label: 'Last update'}, {property: 'modifiedby.name', label: 'Updated by'}]
       show:
         fields:
           - { property: 'model.image', type: 'image', base_path: '%app.path.car_model_images%' }
