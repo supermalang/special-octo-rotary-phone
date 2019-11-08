@@ -29,3 +29,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Subscriber\ReservationSubscriber:               # New symffony versions event listeners and subscribers
+        arguments:
+            - "@logger"
+            - "@doctrine.orm.default_entity_manager"
+            - "@state_machine.car_reservation"
+        tags:
+            - { name: kernel.event_subscriber }

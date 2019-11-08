@@ -3,10 +3,21 @@ easy_admin:
     Reservation:
         class: App\Entity\Reservation
         controller: App\Controller\ReservationController
+        disabled_actions: ['delete']
+        list:
+          fields: [customer, reservedCar, pickupDate, dropoffDate, dailyRate, status]
         show:
+          actions:
+            - {name: approve, label: Approve Reservation, icon: calendar-check, css_class: btn btn-success}
+            - {name: confirm, label: Confirm Reservation, icon: calendar-check, css_class: btn btn-info}
+            - {name: acceptquote, label: Accept Quotation, icon: calendar-check, css_class: btn btn-warning}
           fields: 
             - customer
+            - customer.phone
+            - customer.email
             - reservedCar
+            - { property: 'reservedCar.model.image', type: 'image', base_path: '%app.path.car_model_images%', css_class: 'img-fluid', type_options: {attr: {class: 'img-fluid'}} }
+            - reservedCar.model
             - pickupDate
             - pickupLocation
             - dropoffDate
@@ -16,7 +27,7 @@ easy_admin:
             - discount
             - driver
             - options
-            - status
+            - {property: status}
             - created
             - createdby.name
             - modified
@@ -25,18 +36,22 @@ easy_admin:
         form:
           fields:
             - { type: 'tab', label: 'Car reservation' }
-            - pickupLocation
-            - { property: 'pickupDate', type_options: { widget: 'single_text' }  }
-            - dropoffLocation
-            - { property: 'dropoffDate', type_options: { widget: 'single_text' }  }
+            - {property: pickupLocation, type: choice, type_options: { choices: {'': '', 'Airport': 'Airport to agency', 'Agency': 'Agency', 'Office': 'Office', 'Home': 'Home' }}}
+            - { property: 'pickupDate', type: date, type_options: { widget: 'single_text' }  }
+            - {property: dropoffLocation, type: choice, type_options: { choices: {'': '', 'Airport': 'Airport to agency', 'Agency': 'Agency', 'Office': 'Office', 'Home': 'Home' }}}
+            - { property: 'dropoffDate', type: date, type_options: { widget: 'single_text' }  }
             - reservedCar
             - { type: 'tab', label: 'Booking Options' }
             - { property: 'options', type: entity, type_options: { class: App\Entity\ReservationOption, choice_label: priceLabel, multiple: true, expanded: true} } 
-            - dailyRate
+            - driver
+            - { property: dailyRate }
             - {property: discountType, type: choice, type_options: { choices: {'Fixed amount': 'Fixed', 'Percent': 'Percent'}}}
-            - discount
+            - { property: discount}
             - { type: 'tab', label: 'Customer' }
             - customer
+            - {property: rentingPurpose, type: choice, type_options: { choices: {'': '', 'Business': 'Business', 'Leisure': 'Leisure', 'Cortege': 'Cortege', 'VTC': 'VTC', 'Wedding': 'Wedding' }}}
+        templates:
+          show: 'easyadmin/reservation/show_reservation.html.twig'
 
     ReservationOption:
       class: App\Entity\ReservationOption
@@ -65,3 +80,10 @@ easy_admin:
             - email
             - { property: 'phone', type: 'tel', label: Phone Number }
             - { property: 'birthDate', type_options: { widget: 'single_text' }  }
+
+    Contract:
+      class: App\Entity\ReservationContract
+      list:
+        actions: ['-new', '-edit', '-delete']
+      show:
+        actions: ['-new', '-edit', '-delete']

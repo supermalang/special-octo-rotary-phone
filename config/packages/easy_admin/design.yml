@@ -8,6 +8,7 @@ easy_admin:
           children:
             - {entity: 'Customer', label: 'Customers', icon: 'user-tie'}
             - {entity: 'Reservation', label: 'Reservations', icon: 'tasks'}
+            - {entity: 'Contract', label: 'Contracts', icon: 'file-signature'}
         - label: 'Fleet'
           icon: 'parking'
           children:
@@ -31,4 +32,3 @@ easy_admin:
       datetime: 'd/m/Y H:i:s'
   list:
     actions: [ {name: new, icon: plus}, show, edit, delete ]
-  

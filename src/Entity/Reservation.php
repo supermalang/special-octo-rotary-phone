@@ -39,13 +39,13 @@ class Reservation
     private $dropoffDate;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Car", inversedBy="reservations", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Car", inversedBy="reservations", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $reservedCar;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Driver", inversedBy="reservations", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Driver", inversedBy="reservations", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $driver;
@@ -112,9 +112,26 @@ class Reservation
      */
     private $options;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\ReservationContract", mappedBy="reservation", cascade={"persist", "remove"})
+     */
+    private $reservationContract;
+
+    /**
+     * @ORM\Column(type="string", length=25, nullable=true)
+     */
+    private $rentingPurpose;
+
     public function __construct()
     {
         $this->options = new ArrayCollection();
+    }
+
+    public function __toString(){
+        $carModel = $this->getReservedCar()->getModel();
+        $pdate = date_format($this->getPickupDate(), 'd M Y');
+        $ddate = date_format($this->getDropoffDate(), 'd M Y');
+        return "Reservation #".$this->getId().": $carModel ($pdate to $ddate)";
     }
 
     public function getId(): ?int
@@ -348,6 +365,35 @@ class Reservation
         if ($this->options->contains($option)) {
             $this->options->removeElement($option);
         }
+
+        return $this;
+    }
+
+    public function getReservationContract(): ?ReservationContract
+    {
+        return $this->reservationContract;
+    }
+
+    public function setReservationContract(ReservationContract $reservationContract): self
+    {
+        $this->reservationContract = $reservationContract;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $reservationContract->getReservation()) {
+            $reservationContract->setReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function getRentingPurpose(): ?string
+    {
+        return $this->rentingPurpose;
+    }
+
+    public function setRentingPurpose(?string $rentingPurpose): self
+    {
+        $this->rentingPurpose = $rentingPurpose;
 
         return $this;
     }

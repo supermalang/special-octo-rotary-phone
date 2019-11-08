@@ -1,0 +1,180 @@
+{% extends '@EasyAdmin/default/show.html.twig' %}
+
+{% block content_title %}
+    {{ parent() }}
+
+    <div class='ml-auto' style="width:fit-content;">
+        {% block item_custom_actions %}
+            {% set _show_actions = easyadmin_get_actions_for_show_item(_entity_config.name) %}
+            {% set _request_parameters = app.request.query.all %}
+            {% set default_actions = ['edit', 'delete','list'] %}
+            {% set _sar_show_actions = [] %}
+            {% for key, value in _show_actions if key not in default_actions  %}
+                {% set _sar_show_actions = _sar_show_actions|merge({(key) : value})  %}
+            {% endfor %}
+
+
+            {# Display the custom actions at the top of the page by removing (filtering) the default actions from the array #}
+            {{ include('@EasyAdmin/default/includes/_actions.html.twig', {
+                actions: _sar_show_actions ,  
+                entity_config: _entity_config, 
+                request_parameters: _request_parameters,
+                translation_domain: _entity_config.translation_domain,
+                trans_parameters: _trans_parameters,
+                item_id: _entity_id,
+                item: entity
+            }, with_context = false) }}
+        {% endblock item_custom_actions %}
+    </div>
+{% endblock content_title %}
+
+{% block show_fields %}
+    {# Fields visible by user #}
+    {% set _fields_visible_by_user = fields|filter((metadata, field) => easyadmin_is_granted(metadata.permission)) %}
+
+    <div class="card" >
+        <h5 class="card-header text-center bg-success text-light">Vehicle Rental Reservation #{{entity.id}}</h5>
+
+        <div class="card-body">
+            <div class='customer-information'>
+                <p class='lead font-weight-bold sar-title'>Customer Information</p>
+                <hr/>
+                <table>
+                    <tr>
+                        <td>Referer's Name</td>
+                        <td>
+                            {% set metadata = fields['customer'] %}
+                            {% if metadata in _fields_visible_by_user %} 
+                                {{ easyadmin_render_field_for_show_view(_entity_config.name, entity, metadata) }} 
+                            {% else %} {{ '<span class="badge badge-warning">Not authorized</span>' }} {% endif %}
+                          </td>
+                    </tr>
+                    <tr>
+                        <td>Email Address</td>
+                        <td>
+                            {% set metadata = fields['customer.email'] %}
+                            {% if metadata in _fields_visible_by_user %} 
+                                {{ easyadmin_render_field_for_show_view(_entity_config.name, entity, metadata) }} 
+                            {% else %} {{ '<span class="badge badge-warning">Not authorized</span>' }} {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Phone Number</td>
+                        <td>
+                            {% set metadata = fields['customer.phone'] %}
+                            {% if metadata in _fields_visible_by_user %} 
+                                {{ easyadmin_render_field_for_show_view(_entity_config.name, entity, metadata) }} 
+                            {% else %} {{ '<span class="badge badge-warning">Not authorized</span>' }} {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class='booking-details'>
+                <p class='lead font-weight-bold sar-title'>Booking Details</p>
+                <hr/>
+                <div class='row'>
+                    <div class='col-8 table-responsive'>
+                    <table class='table-sm'>
+                        <tr>
+                            <td>Reservation Number</td>
+                            <td> #{{entity.id}} </td>
+                        </tr>
+                        <tr>
+                            <td>Reservation Request Date</td>
+                            <td class='pr-2'>
+                                {% set metadata = fields['created'] %}
+                                {% if metadata in _fields_visible_by_user %} 
+                                    {{ easyadmin_render_field_for_show_view(_entity_config.name, entity, metadata) }} 
+                                {% else %} {{ '<span class="badge badge-warning">Not authorized</span>' }} {% endif %}
+                            </td>
+                        </tr>
+                        <tr><td class='table-cell'><p class='lead text-uppercase pt-3 mb-1'>Pickup Details</p></tr></tr>
+                        <tr>
+                            <td class='pr-2'>Pickup Location</td>
+                            <td class='pr-2'>
+                                {% set metadata = fields['pickupLocation'] %}
+                                {% if metadata in _fields_visible_by_user %} 
+                                    {{ easyadmin_render_field_for_show_view(_entity_config.name, entity, metadata) }} 
+                                {% else %} {{ '<span class="badge badge-warning">Not authorized</span>' }} {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class='pr-2'>Pickup Date Time</td>
+                            <td class='pr-2'>
+                                {% set metadata = fields['pickupDate'] %}
+                                {% if metadata in _fields_visible_by_user %} 
+                                    {{ easyadmin_render_field_for_show_view(_entity_config.name, entity, metadata) }} 
+                                {% else %} {{ '<span class="badge badge-warning">Not authorized</span>' }} {% endif %}
+                            </td>
+                        </tr>
+                        <tr><td class='table-cell'><p class='lead text-uppercase pt-3 mb-1'>Drop-Off Details</p></td></tr>
+                        <tr>
+                            <td class='pr-2'>Drop-Off Location</td>
+                            <td class='pr-2'>
+                                {% set metadata = fields['dropoffLocation'] %}
+                                {% if metadata in _fields_visible_by_user %} 
+                                    {{ easyadmin_render_field_for_show_view(_entity_config.name, entity, metadata) }} 
+                                {% else %} {{ '<span class="badge badge-warning">Not authorized</span>' }} {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class='pr-2'>Return Date Time</td>
+                            <td class='pr-2'>
+                                {% set metadata = fields['dropoffDate'] %}
+                                {% if metadata in _fields_visible_by_user %} 
+                                    {{ easyadmin_render_field_for_show_view(_entity_config.name, entity, metadata) }} 
+                                {% else %} {{ '<span class="badge badge-warning">Not authorized</span>' }} {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                    <div class='col-4 text-center'>
+                        {% set metadata = fields['reservedCar.model.image'] %}
+                        {% set image_src= metadata.base_path ~ '/' ~ entity.reservedCar.model.image%}
+                        {% if metadata in _fields_visible_by_user %} 
+                        <a href="#" class="easyadmin-thumbnail" data-featherlight="#easyadmin-lightbox-sar1" data-featherlight-close-on-click="anywhere">
+                            <img class='img-fluid' src="{{ asset(image_src) }}">
+                        </a>
+
+                        <div id="easyadmin-lightbox-sar1" class="easyadmin-lightbox">
+                            <img src="{{ asset(image_src) }}">
+                        </div>
+
+                        <p class='text-light'>
+                            {% set metadata = fields['reservedCar.model'] %}
+                            {% if metadata in _fields_visible_by_user %} 
+                                {{ easyadmin_render_field_for_show_view(_entity_config.name, entity, metadata) }} 
+                            {% endif %}
+                        </p>
+                        {% else %} {{ '<span class="badge badge-warning">Not authorized</span>' }} {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block item_actions %}
+    {% set _show_actions = easyadmin_get_actions_for_show_item(_entity_config.name) %}
+    {% set _request_parameters = app.request.query.all %}
+    {% set default_actions = ['edit', 'delete','list'] %}
+    {% set _sar_show_actions = [] %}
+    {% for key, value in _show_actions if key in default_actions  %}
+        {% set _sar_show_actions = _sar_show_actions|merge({(key) : value})  %}
+    {% endfor %}
+
+
+    {# Display the custom actions at the top of the page by removing (filtering) the default actions from the array #}
+    {{ include('@EasyAdmin/default/includes/_actions.html.twig', {
+        actions: _sar_show_actions ,  
+        entity_config: _entity_config, 
+        request_parameters: _request_parameters,
+        translation_domain: _entity_config.translation_domain,
+        trans_parameters: _trans_parameters,
+        item_id: _entity_id,
+        item: entity
+    }, with_context = false) }}
+{% endblock item_actions %}
+
+

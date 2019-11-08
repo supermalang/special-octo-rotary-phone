@@ -105,10 +105,13 @@ easy_admin:
     CarBrand:
       class: App\Entity\CarBrand
       list:
+        title: Car Manufacturers
         fields: [id, {property: image, type: image, label: Logo, base_path: '%app.path.manufacturers_images%'}, {property: label, label: Name}]
       show:
+        title: Car Manufacturer
         fields: [{ property: 'image', type: 'image', label: Logo, base_path: '%app.path.manufacturers_images%' }, {property: label, label: Manufacturer Name}, models, created, createdby, modified, modifiedby, versionHistory]
       form:
+        title: Car Manufacturer
         fields:
           - { property: 'imageFile', type: 'vich_image', label: Logo }
           - {property: label, label: Manufacturer Name}

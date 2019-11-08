@@ -101,7 +101,7 @@ class Customer
     private $created;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $createdby;
@@ -112,7 +112,7 @@ class Customer
     private $modified;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", cascade={"persist", "remove"})
      */
     private $modifiedby;
 
@@ -131,9 +131,15 @@ class Customer
      */
     private $reservations;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ReservationContract", mappedBy="customer")
+     */
+    private $reservationContracts;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
+        $this->reservationContracts = new ArrayCollection();
     }
 
     public function __toString(){
@@ -422,6 +428,37 @@ class Customer
             // set the owning side to null (unless already changed)
             if ($reservation->getCustomer() === $this) {
                 $reservation->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ReservationContract[]
+     */
+    public function getReservationContracts(): Collection
+    {
+        return $this->reservationContracts;
+    }
+
+    public function addReservationContract(ReservationContract $reservationContract): self
+    {
+        if (!$this->reservationContracts->contains($reservationContract)) {
+            $this->reservationContracts[] = $reservationContract;
+            $reservationContract->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservationContract(ReservationContract $reservationContract): self
+    {
+        if ($this->reservationContracts->contains($reservationContract)) {
+            $this->reservationContracts->removeElement($reservationContract);
+            // set the owning side to null (unless already changed)
+            if ($reservationContract->getCustomer() === $this) {
+                $reservationContract->setCustomer(null);
             }
         }
 

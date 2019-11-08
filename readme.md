@@ -1,5 +1,6 @@
 composer require api
 composer require nesbot/carbon (to have nice datetime like "5 minutes ago" )
+composer require symfony/event-dispatcher
 
 php bin/console make:entity
 php bin/console make:entity --regenerate
@@ -13,6 +14,7 @@ php bin/console make:controller --no-template
 php bin/console security:encode
 
 php bin/console workflow:dump workflow-name | dot -Tpng -o graph.png
+php bin/console config:dump-reference framework workflows
 
 
 To enable the GraphQL support, run composer require webonyx/graphql-php,

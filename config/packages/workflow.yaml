@@ -1,0 +1,64 @@
+framework:
+    workflows: 
+        car_reservation:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: status
+            supports:
+                - App\Entity\Reservation
+            initial_marking: draft
+            places: 
+                - draft             # whe the reservation is just created
+                - approved          # When the reseration is approved
+                - denied            # When the reservation is denied by the renting owner (ex: bases on age of customer)
+                - canceled          # The reservation is cancelled
+                - aborted           # The reservation has been aborted by the system
+                - confirmed         # When the confirmation is made with the customer
+                - quote_sent
+                - quote_accepted
+                - processing
+                - closed            # The reservation is closed
+            transitions:
+                approve:
+                    from: draft
+                    to: approved
+                deny:
+                    from: draft
+                    to: denied
+                cancel:
+                    from: draft
+                    to: canceled
+                confirm:
+                    from: approved
+                    to: confirmed
+                cancel_:
+                    from: confirmed
+                    to: canceled
+                resend_quote:
+                    from: confirmed
+                    to: quote_sent
+                system_send_quote:
+                    from: confirmed
+                    to: quote_sent
+                approve_quote:
+                    from: quote_sent
+                    to: quote_accepted
+                reject_quote:
+                    from: quote_sent
+                    to: confirmed
+                system_abort_quote:
+                    from: quote_sent
+                    to: aborted
+                system_process_contract:   # The system automaticaly closes the reservation after the car has been returned
+                    from: quote_accepted
+                    to: processing
+                system_close:                       # The system automaticaly closes the reservation after the car has been returned
+                    from: processing
+                    to: closed
+                system_abort:                       # The system automaticaly abort the reservation after given time if there is no user to take the order into account
+                    from: draft
+                    to: aborted
+                system_abort_:
+                    from: confirmed                 # The system automaticaly abort the reservation after given time if there is no user to take the order into account
+                    to: aborted
