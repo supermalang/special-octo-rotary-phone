@@ -17,5 +17,9 @@ php bin/console workflow:dump workflow-name | dot -Tpng -o graph.png
 php bin/console config:dump-reference framework workflows
 
 
+php bin/console debug:event-dispatcher [Event Name]
+php bin/console make:twig-extension
+php bin/console debug:twig [--filter=price]
+
 To enable the GraphQL support, run composer require webonyx/graphql-php,
 when browse /api/graphql.

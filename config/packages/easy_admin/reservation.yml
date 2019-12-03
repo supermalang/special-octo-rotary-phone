@@ -7,10 +7,15 @@ easy_admin:
         list:
           fields: [customer, reservedCar, pickupDate, dropoffDate, dailyRate, status]
         show:
+          title: "%%entity_label%% #%%entity_id%%"
           actions:
-            - {name: approve, label: Approve Reservation, icon: calendar-check, css_class: btn btn-success}
-            - {name: confirm, label: Confirm Reservation, icon: calendar-check, css_class: btn btn-info}
-            - {name: acceptquote, label: Accept Quotation, icon: calendar-check, css_class: btn btn-warning}
+            - {name: confirm, label: Confirm Reservation, icon: calendar-check, css_class: btn btn-primary}
+            - {name: deny, label: Deny, icon: ban, css_class: btn btn-danger}
+            - {name: approve_quote, label: Accept Quotation, icon: calendar-check, css_class: btn btn-primary}
+            - {name: reject_quote, label: Reject Quotation, icon: ban, css_class: btn btn-danger}
+            - {name: resend_quote, label: Resend Quotation, icon: paper-plane, css_class: btn btn-info}
+            - {name: cancel, label: Cancel, icon: times, css_class: btn btn-warning}
+            - {name: cancel_, label: Cancel, icon: times, css_class: btn btn-warning}
           fields: 
             - customer
             - customer.phone

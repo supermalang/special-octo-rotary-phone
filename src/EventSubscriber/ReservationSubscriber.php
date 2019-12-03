@@ -1,5 +1,5 @@
 <?php
-namespace App\Subscriber;
+namespace App\EventSubscriber;
 
 use Symfony\Component\Mime\Email;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -58,7 +58,7 @@ class ReservationSubscriber implements EventSubscriberInterface{
     }
 
     public function sendQuote(TransitionEvent $event){
-        $transport = (new EsmtpTransport('smtp.office365.com', 587, 'tls'))->setUsername('md@elhadjmalang.com')->setPassword('mB@rkham91!');
+        $transport = (new EsmtpTransport('smtp.office365.com', 587, 'tls'))->setUsername('md@elhadjmalang.com')->setPassword('P@sser000!');
         $mailer = new Mailer($transport);
         $customer = $event->getSubject()->getCustomer();
         $resrv_id = $event->getSubject()->getId();

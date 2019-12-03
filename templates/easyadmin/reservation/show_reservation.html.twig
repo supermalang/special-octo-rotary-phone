@@ -3,20 +3,23 @@
 {% block content_title %}
     {{ parent() }}
 
+
     <div class='ml-auto' style="width:fit-content;">
         {% block item_custom_actions %}
             {% set _show_actions = easyadmin_get_actions_for_show_item(_entity_config.name) %}
             {% set _request_parameters = app.request.query.all %}
+            {# The EasyAdmin default actions #}
             {% set default_actions = ['edit', 'delete','list'] %}
+            {# The EasyAdmin custom actions #}
             {% set _sar_show_actions = [] %}
             {% for key, value in _show_actions if key not in default_actions  %}
                 {% set _sar_show_actions = _sar_show_actions|merge({(key) : value})  %}
             {% endfor %}
 
-
             {# Display the custom actions at the top of the page by removing (filtering) the default actions from the array #}
+            {# The next_step filter displays only actions that aare allowed at the current status of the entity #}
             {{ include('@EasyAdmin/default/includes/_actions.html.twig', {
-                actions: _sar_show_actions ,  
+                actions: _sar_show_actions|next_step('car_reservation', entity) ,  
                 entity_config: _entity_config, 
                 request_parameters: _request_parameters,
                 translation_domain: _entity_config.translation_domain,
@@ -37,7 +40,7 @@
 
         <div class="card-body">
             <div class='customer-information'>
-                <p class='lead font-weight-bold sar-title'>Customer Information</p>
+                <p class='lead font-weight-bold sar-title mt-2 mb-1'>Customer Information</p>
                 <hr/>
                 <table>
                     <tr>
@@ -70,7 +73,7 @@
                 </table>
             </div>
             <div class='booking-details'>
-                <p class='lead font-weight-bold sar-title'>Booking Details</p>
+                <p class='lead font-weight-bold sar-title mt-4 mb-1'>Booking Details</p>
                 <hr/>
                 <div class='row'>
                     <div class='col-8 table-responsive'>
@@ -150,6 +153,59 @@
                     </div>
                 </div>
             </div>
+            <div class='booking-fees'>
+                <p class='lead font-weight-bold sar-title mt-4 mb-1'>Rental Rates and fees</p>
+                <hr/>
+                <div>
+                    <table style="width:100%;">
+                        <tr style="width:100%;">
+                            <td width="60%">
+                                {% set metadata = fields['reservedCar.model'] %}
+                                {% if metadata in _fields_visible_by_user %} 
+                                    {{ easyadmin_render_field_for_show_view(_entity_config.name, entity, metadata) }}
+                                {% else %} {{ '<span class="badge badge-warning">Not authorized</span>' }} {% endif %}
+                            </td>
+                            <td width="20%">
+                                {% set metadata = fields['numberOfDays'] %}
+                                {% if metadata in _fields_visible_by_user %} 
+                                    {{ easyadmin_render_field_for_show_view(_entity_config.name, entity, metadata) }} day(s)
+                                {% else %} {{ '<span class="badge badge-warning">Not authorized</span>' }} {% endif %}
+                            </td>
+                            <td width="20%"> #{{entity.id}} </td>
+                        </tr>
+
+                        {% set value = entity.options %}
+                        {% set entity_config = _entity_config %}
+                        <tr><td class='pt-2 font-weight-bolder font-weight-lighter'>Rental Options</td></tr>
+                        {% if value|length > 0 %}
+                            {% for item in value|slice(0, entity_config.show.max_results) %}
+                                <tr>
+                                    {% if link_parameters is defined %}
+                                        {# the empty string concatenation is needed when the primary key is an object (e.g. an Uuid object) #}
+                                        {% set primary_key_value = '' ~ attribute(item, link_parameters.primary_key_name) %}
+
+                                        <td class='pl-2'> <a href="{{ path('easyadmin', link_parameters|merge({ id: primary_key_value, referer: '' })) }}">{{ item }}</a> </td>
+                                    {% else %}
+                                        <td class='pl-2'>{{ item }}</td>
+                                    {% endif %}
+
+                                    <td>  </td>
+                                    <td> {{item.price}} </td>
+                                </tr>
+                            {% endfor %}
+
+                            {% set _remaining_items = value|length - entity_config.show.max_results %}
+                            {% if _remaining_items > 0 %}
+                                <li class="remaining-items">({{ 'show.remaining_items'|transchoice(_remaining_items, {}, 'EasyAdminBundle') }})</li>
+                            {% endif %}
+                        {% else %}
+                            <tr class="empty collection-empty">
+                                {{ include(entity_config.templates.label_empty) }}
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -176,5 +232,3 @@
         item: entity
     }, with_context = false) }}
 {% endblock item_actions %}
-
-
